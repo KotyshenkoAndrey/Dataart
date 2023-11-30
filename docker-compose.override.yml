@@ -21,6 +21,8 @@ services:
       - "10000:10000"
     networks:
       - data_practice
+    env_file:
+      - env.api
 
   processor.api:
     environment:

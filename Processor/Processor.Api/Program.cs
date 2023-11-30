@@ -2,6 +2,7 @@ using DataArt.Settings;
 using DataArt.Database;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime;
+using Processor.Api.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +29,7 @@ services
 
 var app = builder.Build();
 app.UseAppSwagger();
-
+DbInit.Execute(app.Services);
 app.MapRazorPages();
 app.MapControllers();
 

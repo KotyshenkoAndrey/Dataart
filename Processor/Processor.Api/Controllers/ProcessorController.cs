@@ -19,7 +19,14 @@ public class ProcessorController : ControllerBase
     {
         if (ModelState.IsValid)
         {
-            if( EventJson.Type == EventTypeEnum.Event1) 
+            var count = GetFilteredEvents().Result.Count();
+            if (EventJson.Type == EventTypeEnum.Event2 && GetFilteredEvents().Result.Count()>0)
+            {
+                _context.IncidentDb.Add(new Incident { Id = EventJson.Id, Type = IncidentTypeEnum.Incident2, Time = EventJson.Time.ToUniversalTime() });
+                return Ok("Event added successfully");
+            }
+            _context.EventDb.Add(new Event { Id = EventJson.Id,Type = EventJson.Type, Time = EventJson.Time});
+            if ( EventJson.Type == EventTypeEnum.Event1) 
             {
                 _context.IncidentDb.Add(new Incident { Id = EventJson.Id, Type = IncidentTypeEnum.Incident1, Time = EventJson.Time.ToUniversalTime() });
             }
@@ -32,6 +39,19 @@ public class ProcessorController : ControllerBase
 
         return BadRequest("Invalid model state");
     }
+
+    [HttpGet("/getEvents")]
+    public async Task<IEnumerable<Event>> GetFilteredEvents()
+    {
+        DateTime twentySecondsAgo = DateTime.UtcNow.AddSeconds(-20);
+
+        var filteredEvents = await _context.EventDb
+            .Where(e => e.Type == EventTypeEnum.Event1 && e.Time >= twentySecondsAgo)
+            .ToListAsync();
+        return filteredEvents;
+    }
+
+
     [HttpGet]
     public async Task<IActionResult> GetIncidents([FromQuery] string sortBy = "Time", [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {

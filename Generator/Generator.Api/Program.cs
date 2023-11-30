@@ -24,7 +24,7 @@ services
     ;
 services.AddHttpClient("ProcessorClient", client =>
 {
-    client.BaseAddress = new Uri(processorURL.URLProcessor);
+    client.BaseAddress = new Uri("http://localhost:10001/getEvent");
 });
 
 var app = builder.Build();

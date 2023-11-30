@@ -25,7 +25,9 @@ public class GeneratorController : ControllerBase
     {
         while (true)
         {
-            await Task.Delay(TimeSpan.FromSeconds(2));
+            //int delay = _random.Next(0, 2);
+            //await Task.Delay(delay);
+            await Task.Delay(2);
             var newEvent = GenerateRandomEvent();
             await SendEventToProcessor(newEvent);
         }
@@ -50,14 +52,13 @@ public class GeneratorController : ControllerBase
         //    string result = response.Content.ReadAsStringAsync().Result;
         //    Console.WriteLine(result);
         //}
-        var client = _client.CreateClient();
+        var client = _client.CreateClient("ProcessorClient");
 
-        string apiUrl = "http://localhost:10001/getEvent";  // Адрес второго контроллера
+        string apiUrl = "getEvent";
 
         var json = JsonConvert.SerializeObject(newEvent);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
-        HttpClient httpClient = new HttpClient();
-        using var response = await httpClient.PostAsync(apiUrl, content);
+        using var response = await client.PostAsync(apiUrl, content);
     }
 
     [HttpPost("/sendManual")]
