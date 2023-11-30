@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  data_postgresql:
+    image: postgres:14.1
+  generator.api:
+    image: ${DOCKER_REGISTRY-}generatorapi
+    build:
+      context: .
+      dockerfile: Generator/Generator.Api/Dockerfile
+  processor.api:
+    image: ${DOCKER_REGISTRY-}processorapi
+    build:
+      context: .
+      dockerfile: Processor/Processor.Api/Dockerfile

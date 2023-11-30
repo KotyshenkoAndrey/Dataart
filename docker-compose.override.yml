@@ -1,0 +1,38 @@
+version: '3.4'
+
+services:
+
+  data_postgresql:
+     environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Passw0rd
+     ports:
+      - "5432:5432"
+     networks:
+      - data_practice
+     volumes:      
+      - ~/.docker-conf/postgresql/data/:/var/lib/postgresql/data
+
+  generator.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "10000:10000"
+    networks:
+      - data_practice
+
+  processor.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "10001:10001"
+    networks:
+      - data_practice
+    env_file:
+      - env.api
+
+networks:
+  data_practice:
+    name: data_practice
+    driver: bridge 

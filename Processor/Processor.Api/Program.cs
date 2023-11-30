@@ -1,7 +1,8 @@
 using DataArt.Settings;
-//using DataArt.Database;
+using DataArt.Database;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime;
+using Processor.Api.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,7 @@ var services = builder.Services;
 services.AddAppCors();
 services.AddAppVersioning();
 services.AddAppSwagger(mainSettings, swaggerSettings);
-//services.AddDbContext<MyDbContext>(opt => opt.UseNpgsql(settings.ConnectionString));
+services.AddDbContext<MyDbContext>(opt => opt.UseNpgsql(settings.ConnectionString));
 
 services.AddRazorPages();
 services.AddControllers().AddNewtonsoftJson();
@@ -28,7 +29,7 @@ services
 
 var app = builder.Build();
 app.UseAppSwagger();
-
+DbInit.Execute(app.Services);
 app.MapRazorPages();
 app.MapControllers();
 

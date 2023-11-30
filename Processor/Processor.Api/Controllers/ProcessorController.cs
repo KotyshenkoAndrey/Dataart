@@ -2,6 +2,7 @@
 using DataArt.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using DataArt.Database;
 
 [ApiController]
 [Route("api/processor")]
@@ -9,9 +10,10 @@ public class ProcessorController : ControllerBase
 {
     int Type = 0;
     DateTime date = DateTime.MinValue;
-    public ProcessorController()
+    private readonly MyDbContext _context;
+    public ProcessorController(MyDbContext context)
     {
-
+        _context = context;
     } 
 
     [HttpPost("/api/processor/getEvent")]
@@ -24,9 +26,10 @@ public class ProcessorController : ControllerBase
     }
 
     //[HttpGet("/api/processor/getTest")]
-    //public string TestEvent()
+    //public async Task<IEnumerable<Incident>> TestEvent()
     //{
-    //    return Type.ToString() + "    " + date.ToString();
+    //    var tasks = await _context.Incident.Include(t => t.Id).ToListAsync();
+    //    return tasks;
     //}
 
 }
