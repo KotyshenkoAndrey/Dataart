@@ -13,7 +13,7 @@ namespace DataArt.Database
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Incident>().ToTable("task");
+            modelBuilder.Entity<Incident>().ToTable("incident");
             modelBuilder.Entity<Incident>().Property(x => x.Id).IsRequired();
             modelBuilder.Entity<Incident>().Property(x => x.Type).IsRequired();
             modelBuilder.Entity<Incident>().HasIndex(x => x.Time);

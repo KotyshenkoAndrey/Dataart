@@ -3,6 +3,10 @@ using DataArt.Entities;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Newtonsoft.Json;
+using System.Text;
+using System.Net.Http;
 
 [ApiController]
 [Route("api/generator")]
@@ -37,11 +41,23 @@ public class GeneratorController : ControllerBase
         };
     }
 
-
     private async Task SendEventToProcessor(Event newEvent)
     {
-        var client = _client.CreateClient("ProcessorClient");
-        await client.PostAsJsonAsync("/api/processor/getEvent", newEvent);
+        //using (var client = new HttpClient())
+        //{
+        //    var response = await client.PostAsync("https://localhost:10001/getEvent", data);
+
+        //    string result = response.Content.ReadAsStringAsync().Result;
+        //    Console.WriteLine(result);
+        //}
+        var client = _client.CreateClient();
+
+        string apiUrl = "http://localhost:10001/getEvent";  // Адрес второго контроллера
+
+        var json = JsonConvert.SerializeObject(newEvent);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        HttpClient httpClient = new HttpClient();
+        using var response = await httpClient.PostAsync(apiUrl, content);
     }
 
     [HttpPost("/sendManual")]
